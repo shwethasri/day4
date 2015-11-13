@@ -1,0 +1,7 @@
+/* stylesheet for paging, sorting and filtering page*/
+#tableDiv{
+    align-items: center;
+    height: 50%;
+    margin: 0 auto;
+    width: 30%;
+}
