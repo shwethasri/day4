@@ -102,9 +102,9 @@ function sortc(){
       var temp = "";
       for( var i = 1; i < rowCount; i++ )
       {
-        for ( var j = 1; j < rowCount-1; j++ )
+        for ( var j = 1; j < rowCount; j++ )
         {
-          for( var k = j+1; k < rowCount-j-1; k++)
+          for( var k = j+1; k < rowCount; k++)
           {
             if( table.rows[j].innerHTML < table.rows[k].innerHTML)
             {
