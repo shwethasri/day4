@@ -100,13 +100,15 @@ function sortc(){
       var collen = table.rows[0].cells.length;
       var rowCount = table.rows.length;
       var temp = "";
-      for( var i = 1; i < rowCount; i++ )
+      for( var i = 1; i < collen; i++ )
       {
-        for ( var j = 1; j < rowCount; j++ )
+        for ( var j = 1; j < rowCount-1; j++ )
         {
-          for( var k = j+1; k < rowCount; k++)
+          for( var k = j; k < rowCount-j-1; k++)
           {
-            if( table.rows[j].innerHTML < table.rows[k].innerHTML)
+            var a = table.rows[j].cells[k].innerHTML;
+            var b = table.rows[j].cells[k+1].innerHTML;
+            if( a <  b)
             {
               temp = table.rows[j].innerHTML;
               table.rows[j].innerHTML = table.rows[k].innerHTML;
@@ -126,17 +128,19 @@ function filter(){
   var td1 = document.getElementById('noh');
   var td2 = document.getElementById('nameh');
   var td3 = document.getElementById('courseh');
-  var inputElement = '<input type="search" placeholder="filter" >';
+  var inputElement1 = '<input id="fliter1" type="search" placeholder="filter" >';
   td1.innerHTML = inputElement;
   tr.appendChild(td1);
+  var inputElement2 = '<input id="fliter2" type="search" placeholder="filter" >';
   td2.innerHTML = inputElement;
   tr.appendChild(td2);
+  var inputElement3 = '<input id="fliter3" type="search" placeholder="filter" >';
   td3.innerHTML = inputElement;
   tr.appendChild(td3);
   table.appendChild(tr);
-  var v1 = td1.innerHTML.value;
-  var v2 = td2.innerHTML.value;
-  var v3 = td3.innerHTML.value;
+  var v1 = document.getElementById("filter1").value;
+  var v2 = document.getElementById("filter1").value;
+  var v3 = document.getElementById("filter1").value;
   var f = 0;
   for( var i = 1; i < rowCount; i++ )
   {
@@ -159,6 +163,7 @@ function filter(){
         }
     }
   }
+  for( var n = 1; n < rowCount; n++ )
   if(f === 1)
   {
     table.rows[i].style.display = table.rows[i].innerHTML;
