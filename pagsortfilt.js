@@ -101,39 +101,12 @@ function createTable() {
   document.getElementById('nodsc').addEventListener('click', function(){sortdc(0);});
   document.getElementById('namedsc').addEventListener('click', function(){sortdc(1);});
   document.getElementById('coursedsc').addEventListener('click', function(){sortdc(2);});
-  document.getElementById('tablehead').focus(filter);
+  document.getElementById('filter').addEventListener('click',filter);
+  table.addEventListener('load', paging);
 }
+/* sorting function for ascending order*/
 function sortac(column){
     var table = document.getElementById('student-Informaton');
-    var collen = table.rows[0].cells.length;
-    var rowCount = table.rows.length;
-    var temp = "", a, b;
-    for( var i = 1; i <= rowCount; i++ )
-    {
-        for ( var j = i; j < rowCount-1; j++ )
-        {
-            var k = j+1;
-            if( column === 0 )
-            {
-              a = parseInt(table.rows[j].cells[column].innerHTML);
-              b = parseInt(table.rows[k].cells[column].innerHTML);
-            }
-            else{
-              a = table.rows[j].cells[column].innerHTML;
-              b = table.rows[k].cells[column].innerHTML;
-            }
-            if( a > b )
-            {
-              temp = table.rows[j].innerHTML;
-              table.rows[j].innerHTML = table.rows[k].innerHTML;
-              table.rows[k].innerHTML = temp;
-            }
-        }
-      }
-}
-function sortdc(column){
-    var table = document.getElementById('student-Informaton');
-    var collen = table.rows[0].cells.length;
     var rowCount = table.rows.length;
     var temp = "", a, b;
     for( var i = 1; i <= rowCount; i++ )
@@ -159,6 +132,35 @@ function sortdc(column){
         }
       }
 }
+/* sorting function for descending order */
+function sortdc(column){
+    var table = document.getElementById('student-Informaton');
+    var rowCount = table.rows.length;
+    var temp = "", a, b;
+    for( var i = 1; i <= rowCount; i++ )
+    {
+        for ( var j = i; j < rowCount-1; j++ )
+        {
+            var k = j+1;
+            if( column === 0 )
+            {
+              a = parseInt(table.rows[j].cells[column].innerHTML);
+              b = parseInt(table.rows[k].cells[column].innerHTML);
+            }
+            else{
+              a = table.rows[j].cells[column].innerHTML;
+              b = table.rows[k].cells[column].innerHTML;
+            }
+            if( a > b )
+            {
+              temp = table.rows[j].innerHTML;
+              table.rows[j].innerHTML = table.rows[k].innerHTML;
+              table.rows[k].innerHTML = temp;
+            }
+        }
+      }
+}
+/*filtering function on table*/
 function filter(){
   var table = document.getElementById('student-Informaton');
   var tr = document.getElementById('headers');
@@ -167,47 +169,87 @@ function filter(){
   var td1 = document.getElementById('noh');
   var td2 = document.getElementById('nameh');
   var td3 = document.getElementById('courseh');
-  var inputElement1 = '<input id="fliter1" type="search" placeholder="filter" >';
+  var inputElement1 = '<input id="filter1" type="search" onchange="filt(0)" >';
   td1.innerHTML = inputElement1;
   tr.appendChild(td1);
-  var inputElement2 = '<input id="fliter2" type="search" placeholder="filter" >';
+  var inputElement2 = '<input id="filter2" type="search" onchange="filt(1)" >';
   td2.innerHTML = inputElement2;
   tr.appendChild(td2);
-  var inputElement3 = '<input id="fliter3" type="search" placeholder="filter" >';
+  var inputElement3 = '<input id="filter3" type="search" onchange="filt(2)" >';
   td3.innerHTML = inputElement3;
   tr.appendChild(td3);
   table.appendChild(tr);
-  var v1 = document.getElementById("filter1").value;
+}
+function filt(column)
+{
+  var table = document.getElementById('student-Informaton');
+  var v1 = parseInt(document.getElementById("filter1").value);
   var v2 = document.getElementById("filter2").value;
   var v3 = document.getElementById("filter3").value;
-  var f = 0;
-  for( var i = 1; i < rowCount; i++ )
+  var rowCount = table.rows.length;
+  for( var i = 1; i <= rowCount; i++ )
   {
-    for ( var j = 1; j < collen; j++ )
+    for ( var j = i; j < rowCount-1; j++ )
     {
-        if( v1  === table.rows[i].cells[j].innerHTML)
+        if( (v1  === parseInt(table.rows[j].cells[column].innerHTML)) || (v2  === table.rows[j].cells[column].innerHTML) || (v3  === table.rows[j].cells[column].innerHTML))
         {
-          f=1;
-          break;
+            table.rows[j].style.display = table.rows[j];
+            break;
         }
-        if( v2  === table.rows[i].cells[j].innerHTML)
-        {
-          f=1;
-          break;
+        else{
+            table.rows[j].style.display = 'none';
         }
-        if( v3  === table.rows[i].cells[j].innerHTML)
-        {
-          f=1;
-          break;
-        }
+      }
     }
-  }
-  for( var n = 1; n < rowCount; n++ )
-  if(f === 1)
+}
+/* function for paging*/
+function paging()
+{
+  var table = document.getElementById('student-Informaton');
+  var count = table.rows.length;
+  var noofrecs = count - 1;
+  var recsperpage = 3;
+  var pages = math.ceil(noofrecs / recsperpage);
+  var currentPage = 0;
+  function showRecs(from,to)
   {
-    table.rows[i].style.display = table.rows[i].innerHTML;
-  }
-  else {
-      table.rows[i].style.display = 'none';
+    for (var i = 1; i < count; i++ )
+    {
+      if( i < from || i > to )
+        table.rows[i].style.display = 'none';
+      else {
+        table.rows[i].style.display = table.rows[i];
+      }
+    }
+    function showPage(pageNumber)
+    {
+      currentPage = pageNumber;
+      var from = (pageNumber - 1) * recsperpage + 1;
+      var to = from + recsperpage - 1;
+      showRecs(from, to);
+    }
+    function prev()
+    {
+      if(currentPage > 1)
+      {
+        showPage(currentPage-1);
+      }
+    }
+    function next()
+    {
+      if(currentPage < pages)
+      {
+        showPage(currentPage+1);
+      }
+    }
+    function pagNav()
+    {
+      var pageDiv = document.getElementById('tableDiv');
+      var pageHtml = '<span onclick="(new paging()).prev();""> &#171  </span> ';
+        for (var page = 1; page <= pages; page++)
+            pageHtml += '<span id="page' + page + '" onclick="(new paging()).showPage(' + page + ');"></span>  ';
+        pageHtml += '<span onclick="(new paging()).next();" >  &#187;</span>';
+        pageDiv.innerHTML = pageHtml;
+    }
   }
 }
